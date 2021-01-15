@@ -15,9 +15,8 @@ protocol MainViewModelDelegate {
 class MainViewModel : RespostaAPI{
     
     func success(Modelo: ModeloFilme) {
-        listaDeFilmes = Modelo
-        
-        FilmesViewController().tableView.reloadData()
+//        listaDeFilmes = Modelo
+//        FilmesViewController().tableView.reloadData()
     }
     
     func failure() {
@@ -25,15 +24,26 @@ class MainViewModel : RespostaAPI{
     }
     
     //MARK: - Properts
-    var listaDeFilmes: ModeloFilme?
+//    var listaDeFilmes: ModeloFilme?
+    private let client: MovieServiceProtocol
+    var viewData: Bindable<MovieViewData?> = Bindable(nil)
     var delegate: MainViewModelDelegate?
     var api =  FilmeAPI()
     var  paginaAtual = 1
     
+    //MARK: - Constructors
+    init(client: MovieServiceProtocol = FilmeAPI()) {
+        self.client = client
+    }
     
     func recebeFilme(){
         api.configura(delegate: self)
-        api.recuperaFilmes(pagina: paginaAtual)
+        api.recuperaFilmes(pagina: paginaAtual) { (Result) in
+            self.delegate?.reloadData(movie: MovieViewData(model: Result))
+        } failure: { (error) in
+            print(error)
+        }
+
 
     }
     

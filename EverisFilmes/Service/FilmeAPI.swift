@@ -9,8 +9,8 @@
 import Foundation
 import Alamofire
 
-protocol filmesProtocolo: class {
-    func recuperaFilmes(pagina:Int)
+protocol MovieServiceProtocol: class {
+    func recuperaFilmes(pagina:Int, completionHandler: @escaping (_ movie: Result) -> Void, failure: (_ error: String) -> Void)
 }
 
 protocol RespostaAPI {
@@ -18,7 +18,7 @@ protocol RespostaAPI {
     func failure()
 }
 
-class FilmeAPI: NSObject, filmesProtocolo {
+class FilmeAPI: NSObject, MovieServiceProtocol {
     
     var delegate: RespostaAPI?
 
@@ -30,7 +30,7 @@ class FilmeAPI: NSObject, filmesProtocolo {
     
     // MARK: - GET
 
-    func recuperaFilmes(pagina:Int)  {
+    func recuperaFilmes(pagina:Int, completionHandler: @escaping (_ movie: Result) -> Void, failure: (_ error: String) -> Void)  {
         
         
         guard let url = URL(string:"https://api.themoviedb.org/3/trending/all/week?api_key=5287ae8d76c11e98a09d2b4dfe0f443e&language=pt-BR&page=\(pagina)") else {return}

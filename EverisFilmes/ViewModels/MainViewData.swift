@@ -13,6 +13,7 @@ protocol MovieViewDataType{
     var originalName: String { get }
     var overview: String { get }
     var posterPath: String { get }
+    var mediaType: String { get }
     
 }
 
@@ -42,6 +43,10 @@ extension MovieViewData: MovieViewDataType {
     
     var posterPath: String {
         return model.posterPath ?? ""
+    }
+    
+    var mediaType: String {
+        return model.mediaType ?? ""
     }
     
   
